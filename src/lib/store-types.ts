@@ -83,3 +83,16 @@ export interface Backend {
   getSetting(key: string): Promise<string | null>;
   setSetting(key: string, value: string): Promise<void>;
 }
+
+export type PersonalSettings = {
+  founderName: string;
+  founderRole: string;
+  founderPhoto: string;
+  email: string;
+  phoneDisplay: string;
+  whatsappNumber: string;
+  linkedin: string;
+  instagram: string;
+  youtube: string;
+  facebook: string;
+};

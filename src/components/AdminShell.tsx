@@ -8,6 +8,7 @@ const NAV = [
   { href: "/admin", label: "Enquiries", icon: "M4 6h16M4 12h16M4 18h10" },
   { href: "/admin/slots", label: "Slot times", icon: "M12 7v5l3 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" },
   { href: "/admin/reports", label: "Reports", icon: "M5 20V10M12 20V4M19 20v-7" },
+  { href: "/admin/settings", label: "Personal info", icon: "M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" },
 ];
 
 function Icon({ d }: { d: string }) {
@@ -129,7 +130,7 @@ export function AdminShell({
       </div>
 
       {/* mobile bottom tabs */}
-      <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-3 border-t border-line bg-paper/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-4 border-t border-line bg-paper/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden">
         {NAV.map((n) => (
           <Link
             key={n.href}

@@ -85,7 +85,11 @@ export function Footer() {
             <span className="hidden sm:inline">. </span>
             <span className="block sm:inline">{t("Independent service, not affiliated with Zomato or Swiggy.")}</span>
           </p>
-          <p>{t("Designed and developed by CodeWizard")}</p>
+          <div className="flex flex-wrap justify-center gap-x-4 sm:justify-end">
+            <Link href="/privacy" className="hover:text-accent">{t("Privacy")}</Link>
+            <Link href="/terms" className="hover:text-accent">{t("Terms")}</Link>
+            <p>{t("Designed and developed by CodeWizard")}</p>
+          </div>
         </div>
       </div>
     </footer>

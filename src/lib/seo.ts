@@ -49,6 +49,7 @@ export function pageMetadata({
       siteName: "Menulift",
       title: hindi && hiTitle ? hiTitle : title,
       description: hindi && hiDesc ? hiDesc : description,
+      images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "Menulift Zomato and Swiggy onboarding" }],
     },
     twitter: {
       card: "summary",
@@ -67,6 +68,15 @@ export type SeoDoc = {
   steps: { t: string; d: string }[];
   list?: { title: string; items: string[] };
   faqs: { q: string; a: string }[];
+  hi?: {
+    title: string;
+    description: string;
+    h1: string;
+    answer: string;
+    steps: { t: string; d: string }[];
+    list?: { title: string; items: string[] };
+    faqs: { q: string; a: string }[];
+  };
 };
 
 export const seoPages: SeoDoc[] = [
@@ -89,6 +99,23 @@ export const seoPages: SeoDoc[] = [
       { q: "How long does Zomato onboarding take?", a: "It depends on how ready your documents are. Our aim is about a week from the point your documents are ready. The free call gives you your own date." },
       { q: "What documents do I need for Zomato?", a: "Usually an FSSAI licence or registration, PAN, bank account proof, and your menu with prices. See the full list on our documents page." },
     ],
+    hi: {
+      title: "किचन के लिए Zomato ऑनबोर्डिंग सेवा | Menulift",
+      description: "Zomato पर अपने किचन या रेस्टोरेंट को लाइव करें। Menulift डॉक्यूमेंट, आवेदन, फॉलो-अप और मेन्यू सेटअप में मदद करता है।",
+      h1: "Zomato ऑनबोर्डिंग, हमारी पूरी मदद के साथ",
+      answer: "Zomato ऑनबोर्डिंग में FSSAI, बैंक विवरण, मेन्यू और फोटो को सही और मंज़ूर करवाना शामिल है। Menulift डॉक्यूमेंट तैयार करता है, आवेदन करता है, फॉलो-अप करता है और मेन्यू व लॉन्च ऑफर सेट करता है।",
+      steps: [
+        { t: "तैयारी जाँचें", d: "हम आपका FSSAI, PAN, बैंक प्रूफ और मेन्यू देखते हैं और साफ बताते हैं कि क्या बाकी है।" },
+        { t: "डॉक्यूमेंट सुधारें", d: "हम नाम में अंतर ठीक करते हैं और डॉक्यूमेंट सही फॉर्मेट में तैयार करते हैं।" },
+        { t: "आवेदन और फॉलो-अप", d: "हम Zomato पर आवेदन करते हैं और हर सवाल या रिजेक्शन की मंज़ूरी तक फॉलो-अप करते हैं।" },
+        { t: "मुनाफ़े वाली मेन्यू से लाइव", d: "आपकी मेन्यू मार्जिन के हिसाब से प्राइस और लॉन्च ऑफर के साथ लाइव होती है।" },
+      ],
+      faqs: [
+        { q: "Zomato पर लिस्टिंग मुफ़्त है?", a: "हाँ। Zomato लिस्टिंग का कोई चार्ज नहीं लेता। डॉक्यूमेंट, आवेदन, फॉलो-अप और मेन्यू सेटअप जैसी Menulift की सेवा अलग से चार्ज होती है।" },
+        { q: "Zomato ऑनबोर्डिंग में कितना समय लगता है?", a: "यह डॉक्यूमेंट की तैयारी पर निर्भर करता है। डॉक्यूमेंट तैयार होने के बाद हमारा लक्ष्य लगभग एक हफ्ता है।" },
+        { q: "Zomato के लिए कौन-से डॉक्यूमेंट चाहिए?", a: "आम तौर पर FSSAI लाइसेंस या रजिस्ट्रेशन, PAN, बैंक अकाउंट प्रूफ और कीमतों वाला मेन्यू चाहिए।" },
+      ],
+    },
   },
   {
     path: "swiggy-onboarding",
@@ -109,6 +136,23 @@ export const seoPages: SeoDoc[] = [
       { q: "Can I go live on Zomato and Swiggy together?", a: "Yes. We prepare one set of documents and file on both, so you go live on both apps at about the same time." },
       { q: "Why do Swiggy applications get rejected?", a: "Common reasons are name mismatches between licence and listing, unclear photos and wrong categories. We check each one before filing." },
     ],
+    hi: {
+      title: "किचन के लिए Swiggy ऑनबोर्डिंग सेवा | Menulift",
+      description: "Swiggy पर अपने किचन या रेस्टोरेंट को लाइव करें। Menulift डॉक्यूमेंट, पार्टनर रजिस्ट्रेशन, फॉलो-अप और मेन्यू सेटअप संभालता है।",
+      h1: "Swiggy ऑनबोर्डिंग, हमारी पूरी मदद के साथ",
+      answer: "Swiggy पार्टनर रजिस्ट्रेशन में FSSAI, बैंक विवरण, मेन्यू और फोटो सही और एक जैसे होने चाहिए। Menulift सब तैयारी और आवेदन करता है, फॉलो-अप करता है और मेन्यू लाइव करता है।",
+      steps: [
+        { t: "रेडीनेस रिव्यू", d: "हम Swiggy की जरूरतों के अनुसार हर किचन के डॉक्यूमेंट देखते हैं।" },
+        { t: "पार्टनर रजिस्ट्रेशन", d: "हम नाम, पता और कैटेगरी लाइसेंस के साथ मेल खाते हुए रजिस्ट्रेशन करते हैं।" },
+        { t: "फॉलो-अप और जवाब", d: "हम हर सवाल या रिजेक्शन का जवाब देते हैं ताकि आवेदन आगे बढ़े।" },
+        { t: "मेन्यू और लॉन्च", d: "मेन्यू मुनाफ़े के हिसाब से प्राइस और पहले ऑर्डर के लिए लॉन्च ऑफर के साथ लाइव होती है।" },
+      ],
+      faqs: [
+        { q: "Swiggy पार्टनर रजिस्ट्रेशन मुफ़्त है?", a: "हाँ। Swiggy लिस्टिंग का अलग से चार्ज नहीं लेता। Menulift की सेवा के लिए शुल्क होता है।" },
+        { q: "क्या Zomato और Swiggy दोनों पर एक साथ जा सकते हैं?", a: "हाँ। हम एक तैयारी से दोनों पर आवेदन कर सकते हैं।" },
+        { q: "Swiggy आवेदन क्यों रिजेक्ट होता है?", a: "नाम का अंतर, धुंधली फोटो और गलत कैटेगरी आम वजह हैं। हम आवेदन से पहले सब जाँचते हैं।" },
+      ],
+    },
   },
   {
     path: "documents-for-zomato-swiggy",
@@ -140,6 +184,26 @@ export const seoPages: SeoDoc[] = [
       { q: "What if my documents have different names?", a: "Name mismatches are a common reason for rejection. We help you correct them before you apply." },
       { q: "Do I need GST?", a: "It depends on your business and turnover. We tell you on the call whether it applies to you." },
     ],
+    hi: {
+      title: "Zomato और Swiggy के लिए डॉक्यूमेंट | Menulift",
+      description: "Zomato और Swiggy पर लिस्ट करने के लिए FSSAI, PAN, बैंक प्रूफ, GST और मेन्यू से जुड़े ज़रूरी डॉक्यूमेंट।",
+      h1: "Zomato और Swiggy के लिए ज़रूरी डॉक्यूमेंट",
+      answer: "ज्यादातर किचन को FSSAI लाइसेंस या रजिस्ट्रेशन, PAN कार्ड, बैंक अकाउंट प्रूफ और कीमतों वाला मेन्यू चाहिए। कुछ मामलों में GST और स्पष्ट फूड फोटो भी चाहिए।",
+      list: {
+        title: "सामान्य चेकलिस्ट",
+        items: ["किचन पते के लिए FSSAI लाइसेंस या रजिस्ट्रेशन", "मालिक या बिज़नेस का PAN कार्ड", "बैंक अकाउंट प्रूफ, जैसे कैंसिल चेक", "बिज़नेस पर लागू GST विवरण", "कीमतों और कैटेगरी वाला मेन्यू", "डिश की साफ तस्वीरें", "किचन या रेस्टोरेंट का पता और संपर्क नंबर"],
+      },
+      steps: [
+        { t: "फ्री क्विज़ लें", d: "छह सवालों से पता चलता है कि आपके किचन में क्या तैयार है और क्या बाकी है।" },
+        { t: "सुधार बताएं", d: "नाम का अंतर और कागज़ की कमी आम देरी की वजह हैं।" },
+        { t: "तैयारी और आवेदन", d: "डॉक्यूमेंट सही होने के बाद हम दोनों ऐप पर आवेदन करते हैं।" },
+      ],
+      faqs: [
+        { q: "होम किचन को FSSAI चाहिए?", a: "भोजन बेचने वाले खाद्य व्यवसाय को आम तौर पर आकार के अनुसार FSSAI रजिस्ट्रेशन या लाइसेंस चाहिए।" },
+        { q: "डॉक्यूमेंट में नाम अलग है?", a: "नाम का अंतर रिजेक्शन की आम वजह है। आवेदन से पहले हम इसे सुधारने में मदद करते हैं।" },
+        { q: "क्या GST चाहिए?", a: "यह आपके बिज़नेस और टर्नओवर पर निर्भर करता है। फ्री कॉल में हम इसकी स्थिति बताते हैं।" },
+      ],
+    },
   },
   {
     path: "fssai-for-cloud-kitchen",
@@ -159,14 +223,33 @@ export const seoPages: SeoDoc[] = [
       { q: "Does Menulift apply for my FSSAI?", a: "We guide you on the right type and check your documents. Ask us on the free call how we can help in your case." },
       { q: "Can I start with a home kitchen?", a: "Yes, many owners do. You still need the right FSSAI document for your kitchen." },
     ],
+    hi: {
+      title: "क्लाउड और होम किचन के लिए FSSAI | Menulift",
+      description: "क्लाउड या होम किचन के लिए FSSAI चाहिए या नहीं, और Zomato और Swiggy पर लाइव होने में किस तरह मदद मिलती है?",
+      h1: "क्लाउड और होम किचन के लिए FSSAI",
+      answer: "FSSAI वह फूड सेफ्टी लाइसेंस या रजिस्ट्रेशन है जो Zomato और Swiggy हर किचन से मांगते हैं। बिज़नेस के आकार के अनुसार रजिस्ट्रेशन या लाइसेंस लगता है और वह लिस्ट किए गए पते से मेल खाना चाहिए।",
+      steps: [
+        { t: "कौन-सा विकल्प चाहिए", d: "बिज़नेस के आकार के अनुसार रजिस्ट्रेशन या लाइसेंस तय होता है।" },
+        { t: "लिस्टिंग से मिलाएँ", d: "FSSAI पर किचन का नाम और पता Zomato और Swiggy लिस्टिंग से मेल खाना चाहिए।" },
+        { t: "वैधता बनाए रखें", d: "लाइसेंस खत्म होने पर लिस्टिंग रुकी जा सकती है, इसलिए रिन्यूअल तारीख ध्यान में रखें।" },
+      ],
+      faqs: [
+        { q: "Zomato और Swiggy के लिए FSSAI अनिवार्य है?", a: "हाँ। दोनों प्लेटफॉर्म किचन के लाइव होने से पहले FSSAI लाइसेंस या रजिस्ट्रेशन मांगते हैं।" },
+        { q: "क्या Menulift मेरा FSSAI करवाता है?", a: "हम सही प्रकार चुनने और डॉक्यूमेंट जाँचने में मार्गदर्शन करते हैं।" },
+        { q: "क्या होम किचन से शुरुआत हो सकती है?", a: "हाँ। कई मालिक होम किचन से शुरू करते हैं, बस सही FSSAI डॉक्यूमेंट होना चाहिए।" },
+      ],
+    },
   },
 ];
 
 export function seoMetadata(doc: SeoDoc, lang: Locale = "en") {
+  const hi = lang === "hi" ? doc.hi : undefined;
   return pageMetadata({
     lang,
     path: doc.path,
-    title: doc.title,
-    description: doc.description,
+    title: hi?.title ?? doc.title,
+    description: hi?.description ?? doc.description,
+    hiTitle: hi?.title,
+    hiDesc: hi?.description,
   });
 }

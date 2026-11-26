@@ -9,6 +9,7 @@ import { LocaleProvider } from "@/components/I18n";
 import { normalizedSiteUrl, pageMetadata } from "@/lib/seo";
 import { founder } from "@/lib/content";
 import { isLocale, locales } from "@/lib/i18n";
+import { getPersonalSettings } from "@/lib/store";
 
 export function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
@@ -28,6 +29,18 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       hiDesc:
         "Menulift होम किचन, क्लाउड किचन और नए रेस्टोरेंट को Zomato और Swiggy पर लाइव कराता है। फ्री 20 मिनट की कॉल बुक करें।",
     }),
+    openGraph: {
+      type: "website",
+      locale: hi ? "hi_IN" : "en_IN",
+      alternateLocale: hi ? ["en_IN"] : ["hi_IN"],
+      url: `${normalizedSiteUrl}${hi ? "/hi" : ""}`,
+      siteName: "Menulift",
+      title: hi ? "Menulift | Zomato और Swiggy पर कुछ ही दिनों में लाइव हों" : "Menulift | Get live on Zomato and Swiggy",
+      description: hi
+        ? "Menulift होम किचन, क्लाउड किचन और नए रेस्टोरेंट को Zomato और Swiggy पर लाइव कराता है।"
+        : "Menulift gets home kitchens, cloud kitchens and new restaurants live on Zomato and Swiggy.",
+      images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "Menulift Zomato and Swiggy onboarding" }],
+    },
   };
 }
 
@@ -40,10 +53,11 @@ export const viewport: Viewport = {
 export default async function RootLayout({ children, params }: { children: React.ReactNode; params: Promise<{ lang: string }> }) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
+  const personal = await getPersonalSettings();
   return (
     <html lang={lang} className={fontClasses}>
       <body>
-        <LocaleProvider locale={lang}>{children}</LocaleProvider>
+        <LocaleProvider locale={lang} personal={personal}>{children}</LocaleProvider>
         <SmoothScroll />
         <Analytics />
         <JsonLd
@@ -55,7 +69,7 @@ export default async function RootLayout({ children, params }: { children: React
                 "@id": `${normalizedSiteUrl}/#organization`,
                 name: "Menulift",
                 url: normalizedSiteUrl,
-                founder: { "@type": "Person", name: founder.name, ...(founder.linkedin ? { sameAs: [founder.linkedin] } : {}) },
+                founder: { "@type": "Person", name: personal.founderName || founder.name, ...(personal.linkedin ? { sameAs: [personal.linkedin] } : founder.linkedin ? { sameAs: [founder.linkedin] } : {}) },
               },
               {
                 "@type": "WebSite",
@@ -72,7 +86,7 @@ export default async function RootLayout({ children, params }: { children: React
                 url: normalizedSiteUrl,
                 description: "Document preparation, application filing, follow-up and menu setup for Zomato and Swiggy onboarding.",
                 areaServed: { "@type": "Country", name: "India" },
-                founder: { "@type": "Person", name: founder.name, ...(founder.linkedin ? { sameAs: [founder.linkedin] } : {}) },
+                founder: { "@type": "Person", name: personal.founderName || founder.name, ...(personal.linkedin ? { sameAs: [personal.linkedin] } : founder.linkedin ? { sameAs: [founder.linkedin] } : {}) },
               },
             ],
           }}

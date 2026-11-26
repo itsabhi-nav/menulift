@@ -7,10 +7,13 @@ import { PageHeader } from "./PageHeader";
 import { CtaBand } from "./sections/CtaBand";
 import { Check, Arrow } from "./ui";
 import { JsonLd } from "./JsonLd";
-import { useContent } from "@/components/I18n";
+import { useContent, useLocale } from "@/components/I18n";
 
 export function SeoPage({ doc }: { doc: SeoDoc }) {
   const { site } = useContent();
+  const locale = useLocale();
+  const docContent = locale === "hi" && doc.hi ? doc.hi : doc;
+  const faqItems = docContent.faqs;
   return (
     <>
       <JsonLd
@@ -21,21 +24,21 @@ export function SeoPage({ doc }: { doc: SeoDoc }) {
               "@type": "BreadcrumbList",
               itemListElement: [
                 { "@type": "ListItem", position: 1, name: "Home", item: siteUrl },
-                { "@type": "ListItem", position: 2, name: doc.h1, item: `${siteUrl}/${doc.path}` },
+                { "@type": "ListItem", position: 2, name: docContent.h1, item: `${siteUrl}/${locale === "hi" ? `hi/${doc.path}` : doc.path}` },
               ],
             },
             {
               "@type": "Service",
-              name: doc.h1,
-              serviceType: doc.h1,
-              url: `${siteUrl}/${doc.path}`,
-              description: doc.answer,
+              name: docContent.h1,
+              serviceType: docContent.h1,
+              url: `${siteUrl}/${locale === "hi" ? `hi/${doc.path}` : doc.path}`,
+              description: docContent.answer,
               provider: { "@type": "Organization", "@id": `${siteUrl}/#organization` },
               areaServed: { "@type": "Country", name: "India" },
             },
             {
               "@type": "FAQPage",
-              mainEntity: doc.faqs.map((f) => ({
+              mainEntity: faqItems.map((f) => ({
                 "@type": "Question",
                 name: f.q,
                 acceptedAnswer: { "@type": "Answer", text: f.a },
@@ -44,14 +47,14 @@ export function SeoPage({ doc }: { doc: SeoDoc }) {
           ],
         }}
       />
-      <PageHeader title={doc.h1} sub={doc.answer} />
+      <PageHeader title={docContent.h1} sub={docContent.answer} />
 
       <section className="bg-paper py-12 text-ink sm:py-28">
         <div className="mx-auto grid max-w-[1360px] gap-10 px-4 sm:px-8 lg:grid-cols-[1fr_1fr] lg:gap-20">
           <div>
-            <h2 className="text-[30px] leading-tight sm:text-[48px]">How it works</h2>
+            <h2 className="text-[30px] leading-tight sm:text-[48px]">{locale === "hi" ? "यह कैसे काम करता है" : "How it works"}</h2>
             <ol className="mt-6 space-y-5">
-              {doc.steps.map((s, i) => (
+              {docContent.steps.map((s, i) => (
                 <li key={s.t} className="flex gap-4">
                   <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-ink font-display text-[16px] text-accent">{i + 1}</span>
                   <div>
@@ -62,11 +65,11 @@ export function SeoPage({ doc }: { doc: SeoDoc }) {
               ))}
             </ol>
           </div>
-          {doc.list ? (
+          {docContent.list ? (
             <div className="rounded-[1.75rem] bg-white p-6 sm:p-10">
-              <h2 className="text-[26px] leading-tight sm:text-[34px]">{doc.list.title}</h2>
+              <h2 className="text-[26px] leading-tight sm:text-[34px]">{docContent.list.title}</h2>
               <ul className="mt-5 space-y-3">
-                {doc.list.items.map((t) => (
+                {docContent.list.items.map((t) => (
                   <li key={t} className="flex gap-3 text-[16px] leading-snug">
                     <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-live text-ink">
                       <Check className="h-3 w-3" />
@@ -82,7 +85,7 @@ export function SeoPage({ doc }: { doc: SeoDoc }) {
             </div>
           ) : (
             <div className="rounded-[1.75rem] bg-ink p-6 text-paper sm:p-10">
-              <h2 className="text-[26px] leading-tight sm:text-[34px]">Not sure where you stand?</h2>
+              <h2 className="text-[26px] leading-tight sm:text-[34px]">{locale === "hi" ? "पता नहीं कहाँ खड़े हैं?" : "Not sure where you stand?"}</h2>
               <p className="mt-3 text-[16px] leading-relaxed text-slate-light">{site.quizHint}</p>
               <Link href={site.quizHref} className="mt-6 inline-flex min-h-12 items-center rounded-full bg-accent px-6 font-semibold text-ink">
                 {site.quizLabel}
@@ -94,9 +97,9 @@ export function SeoPage({ doc }: { doc: SeoDoc }) {
 
       <section className="bg-white py-12 text-ink sm:py-28">
         <div className="mx-auto max-w-[900px] px-4 sm:px-8">
-          <h2 className="text-[30px] leading-tight sm:text-[48px]">Questions owners ask</h2>
+          <h2 className="text-[30px] leading-tight sm:text-[48px]">{locale === "hi" ? "मालिक कौन-कौन से सवाल पूछते हैं" : "Questions owners ask"}</h2>
           <div className="mt-6 divide-y divide-line border-y border-line">
-            {doc.faqs.map((f) => (
+            {faqItems.map((f) => (
               <div key={f.q} className="py-5">
                 <h3 className="text-[19px] leading-snug sm:text-[22px]">{f.q}</h3>
                 <p className="mt-2 text-[16px] leading-relaxed text-slate">{f.a}</p>

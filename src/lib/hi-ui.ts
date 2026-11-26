@@ -1,5 +1,7 @@
 /** Hindi for interface strings. The English text is the key; anything missing stays English. */
 export const hiUI: Record<string, string> = {
+  Privacy: "गोपनीयता",
+  Terms: "नियम",
   // navigation and chrome
   Home: "होम",
   "How it works": "यह कैसे काम करता है",

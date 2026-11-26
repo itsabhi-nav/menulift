@@ -1,6 +1,6 @@
 import { normalizeSchedule, type Schedule } from "./slots";
-import type { Backend, Lead, LeadStatus, LeadType, ListOpts } from "./store-types";
-export type { Lead, LeadStatus, LeadType } from "./store-types";
+import type { Backend, Lead, LeadStatus, LeadType, ListOpts, PersonalSettings } from "./store-types";
+export type { Lead, LeadStatus, LeadType, PersonalSettings } from "./store-types";
 
 /**
  * One entry point for storage. DATABASE_URL set -> Postgres, otherwise a local SQLite file.
@@ -49,4 +49,48 @@ export async function saveSchedule(input: unknown) {
   const s = normalizeSchedule(input);
   await (await be()).setSetting(SCHEDULE_KEY, JSON.stringify(s));
   return s;
+}
+
+const PERSONAL_KEY = "personal_settings";
+export const defaultPersonalSettings: PersonalSettings = {
+  founderName: "Anshuman",
+  founderRole: "Founder of Menulift",
+  founderPhoto: "/photos/founder.jpg",
+  email: "hello@menulift.in",
+  phoneDisplay: "+91 98765 43210",
+  whatsappNumber: "919876543210",
+  linkedin: "",
+  instagram: "",
+  youtube: "",
+  facebook: "",
+};
+
+export async function getPersonalSettings(): Promise<PersonalSettings> {
+  const raw = await (await be()).getSetting(PERSONAL_KEY);
+  if (!raw) return defaultPersonalSettings;
+  try {
+    return { ...defaultPersonalSettings, ...(JSON.parse(raw) as Partial<PersonalSettings>) };
+  } catch {
+    return defaultPersonalSettings;
+  }
+}
+
+export async function savePersonalSettings(input: unknown): Promise<PersonalSettings> {
+  const r = input && typeof input === "object" ? (input as Record<string, unknown>) : {};
+  const clean = (key: keyof PersonalSettings, max = 300) =>
+    typeof r[key] === "string" ? r[key].trim().slice(0, max) : defaultPersonalSettings[key];
+  const settings: PersonalSettings = {
+    founderName: clean("founderName", 80),
+    founderRole: clean("founderRole", 120),
+    founderPhoto: clean("founderPhoto", 500),
+    email: clean("email", 180),
+    phoneDisplay: clean("phoneDisplay", 40),
+    whatsappNumber: String(clean("whatsappNumber", 20)).replace(/\D/g, "").slice(-15),
+    linkedin: clean("linkedin", 500),
+    instagram: clean("instagram", 500),
+    youtube: clean("youtube", 500),
+    facebook: clean("facebook", 500),
+  };
+  await (await be()).setSetting(PERSONAL_KEY, JSON.stringify(settings));
+  return settings;
 }
