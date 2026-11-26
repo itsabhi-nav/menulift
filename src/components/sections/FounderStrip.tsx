@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "@/components/L";
 import { Arrow } from "../ui";
-import { useContent, useT } from "@/components/I18n";
+import { useContent, useLocale, useT } from "@/components/I18n";
 
 const points = [
   "We go through your kitchen's checklist together",
@@ -13,6 +13,7 @@ const points = [
 
 export function FounderStrip() {
   const t = useT();
+  const locale = useLocale();
   const { founder, site } = useContent();
   return (
     <section className="bg-white py-14 text-ink sm:py-32">
@@ -33,7 +34,7 @@ export function FounderStrip() {
               </p>
             </div>
             <h2 className="mt-6 text-[32px] leading-[1.05] sm:mt-8 sm:text-[56px]">
-              {t("Your free call is with Anshuman.")}
+              {locale === "hi" ? `आपकी फ्री कॉल ${founder.name} के साथ है।` : `Your free call is with ${founder.name}.`}
             </h2>
             <p className="mt-4 max-w-[44ch] text-[16px] leading-relaxed text-slate-light sm:text-[19px]">
               {t("20 minutes, one to one. Whether you are starting a new food business or already cooking at home, you will know your next step.")}
@@ -59,7 +60,7 @@ export function FounderStrip() {
                 {t("Book my free call")}
               </Link>
               <Link href="/about" className="group inline-flex min-h-[44px] items-center justify-center gap-1.5 text-[16px] font-medium text-accent hover:underline">
-                {t("More about Anshuman")}
+                {locale === "hi" ? `${founder.name} के बारे में और जानें` : `More about ${founder.name}`}
                 <Arrow className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </div>

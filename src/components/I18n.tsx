@@ -17,6 +17,7 @@ export function LocaleProvider({ locale, personal, children }: { locale: Locale;
 }
 
 export const useLocale = () => useContext(Ctx);
+export const usePersonalSettings = () => useContext(PersonalCtx);
 
 /** The site content (copy, plans, FAQs, quiz) in the current language. */
 export function useContent() {
@@ -25,8 +26,13 @@ export function useContent() {
   return useMemo(() => {
     const content = getContent(locale);
     if (!personal) return content;
+    const founderName = personal.founderName || content.founder.name;
+    const steps = content.steps.map((step) =>
+      step.who === "You and Anshuman" ? { ...step, who: `You and ${founderName}` } : step,
+    );
     return {
       ...content,
+      steps,
       site: {
         ...content.site,
         whatsappNumber: personal.whatsappNumber || content.site.whatsappNumber,

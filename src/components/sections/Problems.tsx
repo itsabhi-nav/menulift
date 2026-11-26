@@ -108,7 +108,7 @@ export function Problems() {
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
-      mm.add("(prefers-reduced-motion: no-preference)", () => {
+      mm.add("(min-width: 1024px) and (prefers-reduced-motion: no-preference)", () => {
         gsap.from(".prob-card", {
           y: 60,
           autoAlpha: 0,
@@ -132,7 +132,10 @@ export function Problems() {
           {t("Paperwork, rejections and silence from the platforms hold most owners back.")}
         </p>
 
-        <div className="prob-grid pb-swipe -mx-4 mt-8 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 sm:mx-0 sm:px-0 lg:mt-16 lg:grid lg:grid-cols-3 lg:gap-6 lg:overflow-visible lg:pb-0">
+        <div
+          className="prob-grid pb-swipe -mx-4 mt-8 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 sm:mx-0 sm:px-0 lg:mt-16 lg:grid lg:grid-cols-3 lg:gap-6 lg:overflow-visible lg:pb-0"
+          data-lenis-prevent
+        >
           {problems.map((p, i) => (
             <article
               key={p.title}

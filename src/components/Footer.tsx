@@ -2,7 +2,7 @@
 
 import Link from "@/components/L";
 import { Wordmark } from "./Nav";
-import { useContent, useT } from "@/components/I18n";
+import { useContent, usePersonalSettings, useT } from "@/components/I18n";
 
 const cols = [
   {
@@ -37,7 +37,8 @@ const cols = [
 
 export function Footer() {
   const t = useT();
-  const { site } = useContent();
+  const { site, founder } = useContent();
+  const personal = usePersonalSettings();
   return (
     <footer className="bg-deep pb-28 text-paper md:pb-0">
       <div className="mx-auto max-w-[1360px] px-4 pt-12 sm:px-8 sm:pt-20">
@@ -60,7 +61,9 @@ export function Footer() {
               <ul className="mt-4 space-y-3 text-[15px] text-slate-light">
                 {c.links.map(([l, h]) => (
                   <li key={l}>
-                    <Link href={h} className="transition-colors hover:text-accent">{t(l)}</Link>
+                    <Link href={h} className="transition-colors hover:text-accent">
+                      {l === "About Anshuman" ? `${t("About")} ${founder.name}` : t(l)}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -75,6 +78,10 @@ export function Footer() {
               <li>
                 <a href={`mailto:${site.email}`} className="transition-colors hover:text-accent">{site.email}</a>
               </li>
+              {personal?.instagram && <li><a href={personal.instagram} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-accent">Instagram</a></li>}
+              {personal?.linkedin && <li><a href={personal.linkedin} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-accent">LinkedIn</a></li>}
+              {personal?.youtube && <li><a href={personal.youtube} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-accent">YouTube</a></li>}
+              {personal?.facebook && <li><a href={personal.facebook} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-accent">Facebook</a></li>}
             </ul>
           </div>
         </div>

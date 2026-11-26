@@ -102,7 +102,16 @@ export function sameOrigin(req: Request) {
       ? new URL(process.env.NEXT_PUBLIC_SITE_URL).host
       : new URL(req.url).host;
     const requestHost = new URL(req.url).host;
-    return originHost === configured || (process.env.NODE_ENV !== "production" && originHost === requestHost);
+    const forwardedHost = req.headers.get("x-forwarded-host")?.split(",")[0]?.trim();
+    const hostHeader = req.headers.get("host");
+    const allowedHosts = new Set([
+      configured,
+      requestHost,
+      forwardedHost,
+      hostHeader,
+      process.env.NODE_ENV !== "production" ? "localhost:3001" : "",
+    ].filter((host): host is string => Boolean(host)));
+    return allowedHosts.has(originHost);
   } catch {
     return false;
   }
