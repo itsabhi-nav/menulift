@@ -23,7 +23,7 @@ export function FounderStrip() {
             <div className="flex items-center gap-4">
               <span className="relative grid h-16 w-16 shrink-0 place-items-center overflow-hidden rounded-full bg-accent font-display text-[28px] text-ink sm:h-20 sm:w-20 sm:text-[34px]">
                 {founder.photo ? (
-                  <Image src={founder.photo} alt={`${founder.name}, ${founder.role}`} fill sizes="80px" className="object-cover" />
+                  <Image src={founder.photo} alt={`${founder.name}, ${founder.role}`} fill sizes="80px" loading="eager" fetchPriority="high" className="object-cover" />
                 ) : (
                   founder.name[0]
                 )}

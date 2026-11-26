@@ -47,6 +47,11 @@ const secure = [
 ];
 
 const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [
+      { protocol: "https", hostname: "*.supabase.co", pathname: "/storage/v1/object/public/**" },
+    ],
+  },
   poweredByHeader: false,
   cacheComponents: true,
   partialPrefetching: true,

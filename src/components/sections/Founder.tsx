@@ -73,6 +73,8 @@ export function Founder({ asH1 = false }: { asH1?: boolean } = {}) {
                   alt={`${founder.name}, ${founder.role}`}
                   fill
                   sizes="(min-width: 1024px) 420px, 90vw"
+                  loading="eager"
+                  fetchPriority="high"
                   className="object-cover"
                 />
               ) : (

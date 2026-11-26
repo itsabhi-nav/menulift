@@ -1,9 +1,10 @@
-import fs from "node:fs/promises";
-import path from "node:path";
 import crypto from "node:crypto";
 import { NextResponse } from "next/server";
 import { getPersonalSettings, savePersonalSettings } from "@/lib/store";
 import { isAdminCookie, sameOrigin } from "@/lib/server-utils";
+import { supabaseServerClient } from "@/lib/store-supabase";
+
+const BUCKET = "uploads";
 
 function authed(req: Request) {
   return isAdminCookie(req.headers.get("cookie")?.match(/ml_admin=([^;]+)/)?.[1]);
@@ -30,17 +31,23 @@ export async function POST(req: Request) {
   if (!extension) return NextResponse.json({ error: "bad_file_type" }, { status: 415 });
 
   const filename = `founder-${crypto.randomUUID()}.${extension}`;
-  const uploadDir = path.join(process.cwd(), "public", "uploads");
-  await fs.mkdir(uploadDir, { recursive: true });
-  const destination = path.join(uploadDir, filename);
-  await fs.writeFile(destination, Buffer.from(await file.arrayBuffer()));
-
   const old = await getPersonalSettings();
-  const next = await savePersonalSettings({ ...old, founderPhoto: `/uploads/${filename}` });
+  const client = supabaseServerClient();
+  const uploaded = await client.storage.from(BUCKET).upload(filename, await file.arrayBuffer(), {
+    contentType: file.type,
+    cacheControl: "public, max-age=31536000",
+    upsert: false,
+  });
+  if (uploaded.error) {
+    return NextResponse.json({ error: "upload_failed", detail: uploaded.error.message }, { status: 500 });
+  }
 
-  if (old.founderPhoto?.startsWith("/uploads/founder-")) {
-    const oldPath = path.join(process.cwd(), "public", "uploads", path.basename(old.founderPhoto));
-    await fs.unlink(oldPath).catch(() => undefined);
+  const publicUrl = client.storage.from(BUCKET).getPublicUrl(filename).data.publicUrl;
+  const next = await savePersonalSettings({ ...old, founderPhoto: publicUrl });
+
+  if (old.founderPhoto?.includes("/storage/v1/object/public/uploads/founder-")) {
+    const oldName = old.founderPhoto.split("/").pop();
+    if (oldName) await client.storage.from(BUCKET).remove([oldName]);
   }
 
   return NextResponse.json(next);
@@ -52,9 +59,9 @@ export async function DELETE(req: Request) {
 
   const old = await getPersonalSettings();
   const next = await savePersonalSettings({ ...old, founderPhoto: "" });
-  if (old.founderPhoto?.startsWith("/uploads/founder-")) {
-    const oldPath = path.join(process.cwd(), "public", "uploads", path.basename(old.founderPhoto));
-    await fs.unlink(oldPath).catch(() => undefined);
+  if (old.founderPhoto?.includes("/storage/v1/object/public/uploads/founder-")) {
+    const oldName = old.founderPhoto.split("/").pop();
+    if (oldName) await supabaseServerClient().storage.from(BUCKET).remove([oldName]);
   }
   return NextResponse.json(next);
 }

@@ -85,6 +85,20 @@ drop policy if exists "Public can manage leads" on public.leads;
 drop policy if exists "Public can read settings" on public.settings;
 drop policy if exists "Public can manage settings" on public.settings;
 
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values (
+  'uploads',
+  'uploads',
+  true,
+  5242880,
+  array['image/jpeg', 'image/png', 'image/webp']::text[]
+)
+on conflict (id) do update
+set
+  public = excluded.public,
+  file_size_limit = excluded.file_size_limit,
+  allowed_mime_types = excluded.allowed_mime_types;
+
 -- Test that the setup was created.
 select 'leads' as table_name, count(*) as rows from public.leads
 union all
