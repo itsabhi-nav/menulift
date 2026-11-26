@@ -13,6 +13,8 @@ declare global {
 export function SmoothScroll() {
   useEffect(() => {
     if (reduced()) return;
+    if (window.matchMedia("(pointer: coarse)").matches) return;
+    if (navigator.maxTouchPoints > 0) return;
     const lenis = new Lenis({ lerp: 0.085, wheelMultiplier: 0.95, touchMultiplier: 1 });
     window.__lenis = lenis;
     lenis.on("scroll", ScrollTrigger.update);

@@ -45,7 +45,7 @@ export function Hero() {
       <div className="absolute inset-0 -z-10" aria-hidden>
         <div className="absolute inset-0">
           <Image
-            src="/photos/cooks.jpg"
+            src="/photos/hero-kitchen.jpg"
             alt=""
             fill
             priority

@@ -170,6 +170,8 @@ html:not(.lenis) {
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-inline: contain;
   touch-action: pan-x pan-y;
+  scroll-behavior: smooth;
+  contain: layout paint;
 }
 
 .pb-swipe > article {

@@ -121,7 +121,7 @@ export function Problems() {
           {problems.map((p, i) => (
             <article
               key={p.title}
-              className="prob-card relative flex flex-col overflow-hidden rounded-[1.75rem] border border-white/10 bg-gradient-to-b from-ink-3 to-ink-2 p-6 max-lg:w-[84vw] max-lg:max-w-[400px] max-lg:shrink-0 max-lg:snap-center sm:rounded-[2rem] sm:p-8"
+              className="prob-card relative flex flex-col overflow-hidden rounded-[1.75rem] border border-white/10 bg-ink-2 p-6 max-lg:w-[84vw] max-lg:max-w-[400px] max-lg:shrink-0 max-lg:snap-center sm:rounded-[2rem] sm:p-8"
             >
               <span className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-danger to-accent" aria-hidden />
               <p className="flex items-center gap-3">
