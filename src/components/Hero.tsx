@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Image from "next/image";
 import Link from "@/components/L";
 import { markReady } from "@/lib/ready";
 import { PhoneLive } from "./PhoneLive";
@@ -43,16 +42,6 @@ export function Hero() {
   return (
     <section ref={root} data-hero className="relative isolate overflow-hidden bg-deep text-paper" aria-labelledby="hero-title">
       <div className="absolute inset-0 -z-10" aria-hidden>
-        <div className="absolute inset-0">
-          <Image
-            src="/photos/hero-kitchen.jpg"
-            alt=""
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover object-[58%_50] opacity-70"
-          />
-        </div>
         <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 75% 60% at 50% 45%, rgb(0 0 0 / 0.7), transparent 80%)" }} />
         <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/50 to-black/90" />
         <div
