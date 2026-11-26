@@ -8,9 +8,7 @@ function client() {
   const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key =
     process.env.SUPABASE_SECRET_KEY ||
-    process.env.SUPABASE_SERVICE_ROLE_KEY ||
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !key) throw new Error("Supabase URL and key are required");
   g.__mlSupabase = createClient(url.replace(/\/rest\/v1\/?$/, ""), key, {
     auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
@@ -45,7 +43,12 @@ function applyFilters(query: ReturnType<SupabaseClient["from"]>, opts: ListOpts)
   if (opts.type) q = q.eq("type", opts.type);
   if (opts.status) q = q.eq("status", opts.status);
   if (opts.q) {
-    const search = opts.q.replaceAll(",", " ").replaceAll(".", " ").slice(0, 60);
+    const search = opts.q
+      .replace(/[^a-zA-Z0-9\s@.+_-]/g, " ")
+      .replace(/[%_,().]/g, "")
+      .trim()
+      .slice(0, 60);
+    if (!search) return q;
     q = q.or(`name.ilike.%${search}%,phone.ilike.%${search}%,kitchen.ilike.%${search}%,note.ilike.%${search}%`);
   }
   return q;
@@ -78,7 +81,7 @@ export const supabase: Backend = {
   },
 
   async listLeads(opts) {
-    let query = applyFilters(client().from("leads"), opts)
+    const query = applyFilters(client().from("leads"), opts)
       .order("created_at", { ascending: false })
       .range(opts.offset, opts.offset + opts.limit - 1);
     const { data, error, count } = await query;

@@ -10,7 +10,9 @@ function pool() {
     g.__mlPg = new Pool({
       connectionString: url,
       max: 5,
-      ssl: local || /sslmode=disable/.test(url) ? undefined : { rejectUnauthorized: false },
+      ssl: local && /sslmode=disable/.test(url)
+        ? undefined
+        : { rejectUnauthorized: true },
     });
   }
   return g.__mlPg;

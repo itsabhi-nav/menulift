@@ -25,8 +25,12 @@ export function cleanUtm(v: unknown) {
 const hits = new Map<string, number[]>();
 /** At most `limit` requests per minute from one address. */
 export function rateLimited(key: string, limit = 12) {
-  if (key.endsWith(":local")) return false; // no proxy address to tell people apart
   const now = Date.now();
+  if (hits.size > 5000) {
+    for (const [hitKey, timestamps] of hits) {
+      if (!timestamps.some((timestamp) => now - timestamp < 60000)) hits.delete(hitKey);
+    }
+  }
   const arr = (hits.get(key) ?? []).filter((t) => now - t < 60000);
   arr.push(now);
   hits.set(key, arr);
@@ -34,7 +38,14 @@ export function rateLimited(key: string, limit = 12) {
 }
 
 export function clientIp(req: Request) {
-  return req.headers.get("x-forwarded-for")?.split(",")[0].trim() || "local";
+  const trusted =
+    req.headers.get("cf-connecting-ip") ||
+    req.headers.get("fly-client-ip") ||
+    req.headers.get("true-client-ip") ||
+    req.headers.get("x-vercel-forwarded-for")?.split(",")[0].trim() ||
+    req.headers.get("x-real-ip");
+  const value = trusted?.trim();
+  return value && value.length <= 45 && /^[a-zA-Z0-9:.]+$/.test(value) ? value : "local";
 }
 
 const sha = (s: string) => createHash("sha256").update(s).digest("hex");
@@ -60,8 +71,7 @@ export function passwordMatches(typed: string) {
 
 /** On the live site (not on your own computer or Wi-Fi), an easy admin password keeps the admin locked. */
 export function passwordTooWeak(req: Request) {
-  const host = (req.headers.get("x-forwarded-host") ?? req.headers.get("host") ?? "").split(":")[0];
-  if (/^(localhost|127\.|192\.168\.|10\.|172\.(1[6-9]|2\d|3[01])\.)/.test(host) || host.endsWith(".local")) return false;
+  if (process.env.NODE_ENV !== "production") return false;
   const pw = adminPassword();
   return pw.length < 10 || /^menulift-local$|^password|^admin|^12345|^qwerty/i.test(pw);
 }
@@ -85,10 +95,14 @@ export function isAdminCookie(value: string | undefined) {
 /** Blocks a request that was sent from another website (a browser always says where a POST came from). */
 export function sameOrigin(req: Request) {
   const o = req.headers.get("origin");
-  if (!o) return true; // not a browser form or fetch from another site
+  if (!o) return req.method === "GET" || req.method === "HEAD";
   try {
-    const host = req.headers.get("x-forwarded-host") ?? req.headers.get("host") ?? new URL(req.url).host;
-    return new URL(o).host === host;
+    const originHost = new URL(o).host;
+    const configured = process.env.NEXT_PUBLIC_SITE_URL
+      ? new URL(process.env.NEXT_PUBLIC_SITE_URL).host
+      : new URL(req.url).host;
+    const requestHost = new URL(req.url).host;
+    return originHost === configured || (process.env.NODE_ENV !== "production" && originHost === requestHost);
   } catch {
     return false;
   }

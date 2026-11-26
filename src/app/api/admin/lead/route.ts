@@ -9,8 +9,10 @@ export async function POST(req: Request) {
   const cookie = req.headers.get("cookie")?.match(/ml_admin=([^;]+)/)?.[1];
   if (!isAdminCookie(cookie)) return NextResponse.json({ error: "unauthorised" }, { status: 401 });
   const b = await readJson(req);
-  if (!b?.id) return NextResponse.json({ error: "bad_request" }, { status: 400 });
-  await updateLead(String(b.id), {
+  if (!b) return NextResponse.json({ error: "bad_request" }, { status: 400 });
+  const id = typeof b?.id === "string" ? cleanText(b.id, 64) : "";
+  if (!/^[A-Za-z0-9_-]+$/.test(id)) return NextResponse.json({ error: "bad_request" }, { status: 400 });
+  await updateLead(id, {
     status: STATUSES.includes(b.status as LeadStatus) ? (b.status as LeadStatus) : undefined,
     note: typeof b.note === "string" ? cleanText(b.note, 500) : undefined,
   });

@@ -11,9 +11,7 @@ function be() {
   const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey =
     process.env.SUPABASE_SECRET_KEY ||
-    process.env.SUPABASE_SERVICE_ROLE_KEY ||
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    process.env.SUPABASE_SERVICE_ROLE_KEY;
   backend ??= supabaseUrl && supabaseKey
     ? import("./store-supabase").then((m) => m.supabase)
     : process.env.DATABASE_URL
@@ -87,17 +85,29 @@ export async function savePersonalSettings(input: unknown): Promise<PersonalSett
   const r = input && typeof input === "object" ? (input as Record<string, unknown>) : {};
   const clean = (key: keyof PersonalSettings, max = 300) =>
     typeof r[key] === "string" ? r[key].trim().slice(0, max) : defaultPersonalSettings[key];
+  const cleanUrl = (key: keyof PersonalSettings) => {
+    const value = clean(key, 500);
+    if (!value) return "";
+    try {
+      const url = new URL(value);
+      return ["https:", "http:"].includes(url.protocol) ? value : "";
+    } catch {
+      return "";
+    }
+  };
   const settings: PersonalSettings = {
     founderName: clean("founderName", 80),
     founderRole: clean("founderRole", 120),
     founderPhoto: clean("founderPhoto", 500),
-    email: clean("email", 180),
+    email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clean("email", 180))
+      ? clean("email", 180)
+      : defaultPersonalSettings.email,
     phoneDisplay: clean("phoneDisplay", 40),
     whatsappNumber: String(clean("whatsappNumber", 20)).replace(/\D/g, "").slice(-15),
-    linkedin: clean("linkedin", 500),
-    instagram: clean("instagram", 500),
-    youtube: clean("youtube", 500),
-    facebook: clean("facebook", 500),
+    linkedin: cleanUrl("linkedin"),
+    instagram: cleanUrl("instagram"),
+    youtube: cleanUrl("youtube"),
+    facebook: cleanUrl("facebook"),
   };
   await (await be()).setSetting(PERSONAL_KEY, JSON.stringify(settings));
   return settings;

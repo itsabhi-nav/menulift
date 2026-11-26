@@ -20,6 +20,7 @@ const analytics = [
 
 const csp = [
   "default-src 'self'",
+  ...(dev ? [] : ["upgrade-insecure-requests", "block-all-mixed-content"]),
   `script-src 'self' 'unsafe-inline'${dev ? " 'unsafe-eval'" : ""} ${analytics}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https:",
@@ -41,6 +42,8 @@ const secure = [
   { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=(), usb=()" },
   { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
   { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
+  { key: "Cross-Origin-Resource-Policy", value: "same-origin" },
+  { key: "X-Permitted-Cross-Domain-Policies", value: "none" },
 ];
 
 const nextConfig: NextConfig = {
