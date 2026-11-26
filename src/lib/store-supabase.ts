@@ -134,13 +134,13 @@ export const supabase: Backend = {
   },
 
   async getSetting(key) {
-    const { data, error } = await client().from("settings").select("v").eq("k", key).maybeSingle();
+    const { data, error } = await client().from("settings").select("value").eq("key", key).maybeSingle();
     if (error) throw error;
-    return data?.v ?? null;
+    return data?.value ?? null;
   },
 
   async setSetting(key, value) {
-    const { error } = await client().from("settings").upsert({ k: key, v: value }, { onConflict: "k" });
+    const { error } = await client().from("settings").upsert({ key, value }, { onConflict: "key" });
     if (error) throw error;
   },
 };

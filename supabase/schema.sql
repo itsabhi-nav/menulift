@@ -23,9 +23,43 @@ create table if not exists public.leads (
 );
 
 create table if not exists public.settings (
-  k text primary key,
-  v text not null
+  key text primary key,
+  value text not null
 );
+
+do $$
+begin
+  if exists (
+    select 1
+    from information_schema.columns
+    where table_schema = 'public'
+      and table_name = 'settings'
+      and column_name = 'k'
+  ) and not exists (
+    select 1
+    from information_schema.columns
+    where table_schema = 'public'
+      and table_name = 'settings'
+      and column_name = 'key'
+  ) then
+    alter table public.settings rename column k to key;
+  end;
+  if exists (
+    select 1
+    from information_schema.columns
+    where table_schema = 'public'
+      and table_name = 'settings'
+      and column_name = 'v'
+  ) and not exists (
+    select 1
+    from information_schema.columns
+    where table_schema = 'public'
+      and table_name = 'settings'
+      and column_name = 'value'
+  ) then
+    alter table public.settings rename column v to value;
+  end;
+end $$;
 
 create unique index if not exists uniq_slot
   on public.leads (slot_date, slot_time)

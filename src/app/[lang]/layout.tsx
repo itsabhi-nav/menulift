@@ -11,6 +11,8 @@ import { founder } from "@/lib/content";
 import { isLocale, locales } from "@/lib/i18n";
 import { getPersonalSettings } from "@/lib/store";
 
+export const instant = false;
+
 export function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
 }
