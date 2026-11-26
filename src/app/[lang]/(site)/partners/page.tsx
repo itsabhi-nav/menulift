@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/PageHeader";
 import { PartnerForm } from "@/components/PartnerForm";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Partner with Menulift | Menulift",
-  description: "FSSAI and GST consultants, equipment and packaging suppliers: send new food-business owners to Menulift with a tracked link.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const { lang } = await params;
+  return pageMetadata({
+    lang: lang === "hi" ? "hi" : "en",
+    path: "partners",
+    title: "Partner with Menulift | Menulift",
+    description: "FSSAI consultants, suppliers and food-service professionals can refer kitchen owners through Menulift.",
+  });
+}
 
 const who = ["FSSAI and GST consultants", "Kitchen equipment sellers", "Packaging suppliers", "POS and billing companies"];
 

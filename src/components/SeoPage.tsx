@@ -16,12 +16,32 @@ export function SeoPage({ doc }: { doc: SeoDoc }) {
       <JsonLd
         data={{
           "@context": "https://schema.org",
-          "@type": "FAQPage",
-          mainEntity: doc.faqs.map((f) => ({
-            "@type": "Question",
-            name: f.q,
-            acceptedAnswer: { "@type": "Answer", text: f.a },
-          })),
+          "@graph": [
+            {
+              "@type": "BreadcrumbList",
+              itemListElement: [
+                { "@type": "ListItem", position: 1, name: "Home", item: siteUrl },
+                { "@type": "ListItem", position: 2, name: doc.h1, item: `${siteUrl}/${doc.path}` },
+              ],
+            },
+            {
+              "@type": "Service",
+              name: doc.h1,
+              serviceType: doc.h1,
+              url: `${siteUrl}/${doc.path}`,
+              description: doc.answer,
+              provider: { "@type": "Organization", "@id": `${siteUrl}/#organization` },
+              areaServed: { "@type": "Country", name: "India" },
+            },
+            {
+              "@type": "FAQPage",
+              mainEntity: doc.faqs.map((f) => ({
+                "@type": "Question",
+                name: f.q,
+                acceptedAnswer: { "@type": "Answer", text: f.a },
+              })),
+            },
+          ],
         }}
       />
       <PageHeader title={doc.h1} sub={doc.answer} />

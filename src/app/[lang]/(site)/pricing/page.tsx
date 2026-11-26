@@ -6,11 +6,17 @@ import { Compare } from "@/components/sections/Compare";
 import { CtaBand } from "@/components/sections/CtaBand";
 import { JsonLd } from "@/components/JsonLd";
 import { offers } from "@/lib/content";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Pricing | Menulift",
-  description: "Three clear ways to get your kitchen live on Zomato and Swiggy. Start with a free call.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const { lang } = await params;
+  return pageMetadata({
+    lang: lang === "hi" ? "hi" : "en",
+    path: "pricing",
+    title: "Zomato and Swiggy Onboarding Pricing | Menulift",
+    description: "Compare Menulift onboarding options for Zomato and Swiggy, with a free call and clear pricing.",
+  });
+}
 
 export default async function Page({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;

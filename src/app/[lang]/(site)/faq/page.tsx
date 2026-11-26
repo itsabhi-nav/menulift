@@ -5,11 +5,17 @@ import { Faq } from "@/components/sections/Faq";
 import { CtaBand } from "@/components/sections/CtaBand";
 import { JsonLd } from "@/components/JsonLd";
 import { faqs } from "@/lib/content";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "FAQ | Menulift",
-  description: "Answers to what owners ask before they book a call.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const { lang } = await params;
+  return pageMetadata({
+    lang: lang === "hi" ? "hi" : "en",
+    path: "faq",
+    title: "Zomato and Swiggy Onboarding FAQs | Menulift",
+    description: "Answers about FSSAI, documents, fees, timelines and menu setup for Zomato and Swiggy onboarding.",
+  });
+}
 
 export default async function Page({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;

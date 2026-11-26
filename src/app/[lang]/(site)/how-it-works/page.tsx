@@ -4,11 +4,17 @@ import { PageHeader } from "@/components/PageHeader";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { Problems } from "@/components/sections/Problems";
 import { CtaBand } from "@/components/sections/CtaBand";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "How it works | Menulift",
-  description: "Four simple steps from your first call to your first Zomato and Swiggy order.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const { lang } = await params;
+  return pageMetadata({
+    lang: lang === "hi" ? "hi" : "en",
+    path: "how-it-works",
+    title: "How Menulift Gets Kitchens Live | Menulift",
+    description: "See the four steps from your free call to document prep, app follow-up and menu launch on Zomato and Swiggy.",
+  });
+}
 
 export default async function Page({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;

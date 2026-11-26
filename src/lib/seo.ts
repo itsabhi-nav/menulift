@@ -1,5 +1,62 @@
 /** Content for the search landing pages. Facts here are general; confirm specifics on the call. */
 export const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://menulift.in";
+export const normalizedSiteUrl = siteUrl.replace(/\/+$/, "");
+
+export type Locale = "en" | "hi";
+
+export function visiblePath(locale: Locale, path = "") {
+  const cleanPath = path ? `/${path.replace(/^\/+|\/+$/g, "")}` : "";
+  return locale === "hi" ? `/hi${cleanPath}` : cleanPath || "/";
+}
+
+export function pageAlternates(locale: Locale, path = "") {
+  const enPath = path ? `/${path.replace(/^\/+|\/+$/g, "")}` : "";
+  return {
+    canonical: `${normalizedSiteUrl}${visiblePath(locale, path)}`,
+    languages: {
+      en: `${normalizedSiteUrl}${enPath || "/"}`,
+      hi: `${normalizedSiteUrl}/hi${enPath}`,
+      "x-default": `${normalizedSiteUrl}${enPath || "/"}`,
+    },
+  };
+}
+
+export function pageMetadata({
+  lang,
+  path = "",
+  title,
+  description,
+  hiTitle,
+  hiDesc,
+}: {
+  lang: Locale;
+  path?: string;
+  title: string;
+  description: string;
+  hiTitle?: string;
+  hiDesc?: string;
+}) {
+  const hindi = lang === "hi";
+  return {
+    title: hindi && hiTitle ? hiTitle : title,
+    description: hindi && hiDesc ? hiDesc : description,
+    alternates: pageAlternates(lang, path),
+    openGraph: {
+      type: "website",
+      locale: hindi ? "hi_IN" : "en_IN",
+      alternateLocale: hindi ? ["en_IN"] : ["hi_IN"],
+      url: `${normalizedSiteUrl}${visiblePath(lang, path)}`,
+      siteName: "Menulift",
+      title: hindi && hiTitle ? hiTitle : title,
+      description: hindi && hiDesc ? hiDesc : description,
+    },
+    twitter: {
+      card: "summary",
+      title: hindi && hiTitle ? hiTitle : title,
+      description: hindi && hiDesc ? hiDesc : description,
+    },
+  };
+}
 
 export type SeoDoc = {
   path: string;
@@ -105,10 +162,11 @@ export const seoPages: SeoDoc[] = [
   },
 ];
 
-export function seoMetadata(doc: SeoDoc) {
-  return {
+export function seoMetadata(doc: SeoDoc, lang: Locale = "en") {
+  return pageMetadata({
+    lang,
+    path: doc.path,
     title: doc.title,
     description: doc.description,
-    alternates: { canonical: `${siteUrl}/${doc.path}` },
-  };
+  });
 }

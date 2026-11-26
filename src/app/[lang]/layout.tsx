@@ -6,7 +6,7 @@ import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import { Analytics } from "@/components/Analytics";
 import { JsonLd } from "@/components/JsonLd";
 import { LocaleProvider } from "@/components/I18n";
-import { siteUrl } from "@/lib/seo";
+import { normalizedSiteUrl, pageMetadata } from "@/lib/seo";
 import { founder } from "@/lib/content";
 import { isLocale, locales } from "@/lib/i18n";
 
@@ -18,11 +18,16 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const { lang } = await params;
   const hi = lang === "hi";
   return {
-    title: hi ? "Menulift | Zomato और Swiggy पर कुछ ही दिनों में लाइव हों" : "Menulift | Get live on Zomato and Swiggy",
-    description: hi
-      ? "Menulift होम किचन, क्लाउड किचन और नए रेस्टोरेंट को Zomato और Swiggy पर लाइव कराता है। फ्री 20 मिनट की कॉल बुक करें।"
-      : "Menulift gets home kitchens, cloud kitchens and new restaurants live on Zomato and Swiggy. Take the free 2-minute Readiness Check, then book a free 20-minute Go-Live Call.",
-    alternates: { languages: { en: siteUrl, hi: `${siteUrl}/hi`, "x-default": siteUrl } },
+    metadataBase: new URL(normalizedSiteUrl),
+    ...pageMetadata({
+      lang: hi ? "hi" : "en",
+      title: "Menulift | Get live on Zomato and Swiggy",
+      description:
+        "Menulift gets home kitchens, cloud kitchens and new restaurants live on Zomato and Swiggy. Take the free readiness check or book a free call.",
+      hiTitle: "Menulift | Zomato और Swiggy पर कुछ ही दिनों में लाइव हों",
+      hiDesc:
+        "Menulift होम किचन, क्लाउड किचन और नए रेस्टोरेंट को Zomato और Swiggy पर लाइव कराता है। फ्री 20 मिनट की कॉल बुक करें।",
+    }),
   };
 }
 
@@ -44,12 +49,32 @@ export default async function RootLayout({ children, params }: { children: React
         <JsonLd
           data={{
             "@context": "https://schema.org",
-            "@type": "ProfessionalService",
-            name: "Menulift",
-            url: siteUrl,
-            description: "Menulift gets home kitchens, cloud kitchens and new restaurants live on Zomato and Swiggy.",
-            areaServed: "IN",
-            founder: { "@type": "Person", name: "Anshuman", ...(founder.linkedin ? { sameAs: [founder.linkedin] } : {}) },
+            "@graph": [
+              {
+                "@type": "Organization",
+                "@id": `${normalizedSiteUrl}/#organization`,
+                name: "Menulift",
+                url: normalizedSiteUrl,
+                founder: { "@type": "Person", name: founder.name, ...(founder.linkedin ? { sameAs: [founder.linkedin] } : {}) },
+              },
+              {
+                "@type": "WebSite",
+                "@id": `${normalizedSiteUrl}/#website`,
+                url: normalizedSiteUrl,
+                name: "Menulift",
+                inLanguage: ["en-IN", "hi-IN"],
+                publisher: { "@id": `${normalizedSiteUrl}/#organization` },
+              },
+              {
+                "@type": "ProfessionalService",
+                "@id": `${normalizedSiteUrl}/#service`,
+                name: "Menulift",
+                url: normalizedSiteUrl,
+                description: "Document preparation, application filing, follow-up and menu setup for Zomato and Swiggy onboarding.",
+                areaServed: { "@type": "Country", name: "India" },
+                founder: { "@type": "Person", name: founder.name, ...(founder.linkedin ? { sameAs: [founder.linkedin] } : {}) },
+              },
+            ],
           }}
         />
       </body>

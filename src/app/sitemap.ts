@@ -8,7 +8,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${siteUrl}/${p}`,
       changeFrequency: "weekly" as const,
       priority: p === "" ? 1 : 0.7,
-      alternates: { languages: { en: `${siteUrl}/${p}`, hi: `${siteUrl}/hi${p ? `/${p}` : ""}` } },
+      alternates: { languages: { en: `${siteUrl}/${p}`, hi: `${siteUrl}/hi${p ? `/${p}` : ""}`, "x-default": `${siteUrl}/${p}` } },
     },
     { url: `${siteUrl}/hi${p ? `/${p}` : ""}`, changeFrequency: "weekly" as const, priority: p === "" ? 0.9 : 0.6 },
   ]);

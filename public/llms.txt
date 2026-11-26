@@ -1,0 +1,23 @@
+# Menulift
+
+Menulift is an India-based onboarding service that helps home kitchens, cloud kitchens and new restaurants prepare for and go live on Zomato and Swiggy.
+
+Primary services:
+- Zomato onboarding and follow-up
+- Swiggy partner registration and follow-up
+- FSSAI and documents readiness guidance
+- Menu setup, pricing review and launch offer setup
+
+Canonical website: https://menulift.in
+
+Important pages:
+- Zomato onboarding: https://menulift.in/zomato-onboarding
+- Swiggy onboarding: https://menulift.in/swiggy-onboarding
+- Documents required: https://menulift.in/documents-for-zomato-swiggy
+- FSSAI guidance: https://menulift.in/fssai-for-cloud-kitchen
+- Pricing: https://menulift.in/pricing
+- Frequently asked questions: https://menulift.in/faq
+- Free readiness check: https://menulift.in/check
+- Book a call: https://menulift.in/book
+
+Menulift is an independent service and is not affiliated with Zomato or Swiggy.
