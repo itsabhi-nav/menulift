@@ -15,10 +15,19 @@ export function LoopVideo({ id, className = "", eager = false, rate = 1 }: { id:
     v.playbackRate = rate;
     const io = new IntersectionObserver(
       ([e]) => {
-        if (e.isIntersecting) v.play().catch(() => {});
-        else v.pause();
+        if (!e.isIntersecting) {
+          v.pause();
+          return;
+        }
+        if (!v.currentSrc) {
+          const mobile = window.matchMedia("(max-width: 767px)").matches;
+          v.src = mobile ? `/media/${id}-s.mp4` : `/media/${id}.mp4`;
+          v.preload = eager ? "auto" : "metadata";
+          v.load();
+        }
+        v.play().catch(() => {});
       },
-      { threshold: 0.15 },
+      { rootMargin: "150px 0px", threshold: 0.15 },
     );
     io.observe(v);
     return () => io.disconnect();
@@ -32,14 +41,11 @@ export function LoopVideo({ id, className = "", eager = false, rate = 1 }: { id:
       muted
       loop
       playsInline
-      preload={eager ? "auto" : "metadata"}
+      preload="none"
       autoPlay={eager}
       disablePictureInPicture
       aria-hidden
       tabIndex={-1}
-    >
-      <source src={`/media/${id}-s.mp4`} type="video/mp4" media="(max-width: 767px)" />
-      <source src={`/media/${id}.mp4`} type="video/mp4" />
-    </video>
+    />
   );
 }

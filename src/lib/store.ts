@@ -1,6 +1,8 @@
 import { normalizeSchedule, type Schedule } from "./slots";
 import type { Backend, Lead, LeadStatus, LeadType, ListOpts, PersonalSettings } from "./store-types";
+import { defaultPersonalSettings } from "./personal-settings";
 export type { Lead, LeadStatus, LeadType, PersonalSettings } from "./store-types";
+export { defaultPersonalSettings };
 
 /**
  * One entry point for storage. DATABASE_URL set -> Postgres, otherwise a local SQLite file.
@@ -59,18 +61,6 @@ export async function saveSchedule(input: unknown) {
 
 const PERSONAL_KEY = "personal_settings";
 let personalCache: { value: PersonalSettings; expires: number } | undefined;
-export const defaultPersonalSettings: PersonalSettings = {
-  founderName: "Anshuman",
-  founderRole: "Founder of Menulift",
-  founderPhoto: "/photos/founder.jpg",
-  email: "hello@menulift.in",
-  phoneDisplay: "+91 98765 43210",
-  whatsappNumber: "919876543210",
-  linkedin: "",
-  instagram: "",
-  youtube: "",
-  facebook: "",
-};
 
 export async function getPersonalSettings(): Promise<PersonalSettings> {
   if (personalCache && personalCache.expires > Date.now()) return personalCache.value;

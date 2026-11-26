@@ -9,10 +9,8 @@ import { LocaleProvider } from "@/components/I18n";
 import { normalizedSiteUrl, pageMetadata } from "@/lib/seo";
 import { founder } from "@/lib/content";
 import { isLocale, locales } from "@/lib/i18n";
-import { getPersonalSettings } from "@/lib/store";
+import { defaultPersonalSettings } from "@/lib/personal-settings";
 import { RouteProgress } from "@/components/RouteProgress";
-
-export const instant = false;
 
 export function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
@@ -56,12 +54,11 @@ export const viewport: Viewport = {
 export default async function RootLayout({ children, params }: { children: React.ReactNode; params: Promise<{ lang: string }> }) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
-  const personal = await getPersonalSettings();
   return (
     <html lang={lang} className={fontClasses}>
       <body>
         <RouteProgress />
-        <LocaleProvider locale={lang} personal={personal}>{children}</LocaleProvider>
+        <LocaleProvider locale={lang} personal={defaultPersonalSettings}>{children}</LocaleProvider>
         <SmoothScroll />
         <Analytics />
         <JsonLd
@@ -73,7 +70,7 @@ export default async function RootLayout({ children, params }: { children: React
                 "@id": `${normalizedSiteUrl}/#organization`,
                 name: "Menulift",
                 url: normalizedSiteUrl,
-                founder: { "@type": "Person", name: personal.founderName || founder.name, ...(personal.linkedin ? { sameAs: [personal.linkedin] } : founder.linkedin ? { sameAs: [founder.linkedin] } : {}) },
+                founder: { "@type": "Person", name: founder.name, ...(founder.linkedin ? { sameAs: [founder.linkedin] } : {}) },
               },
               {
                 "@type": "WebSite",
@@ -90,7 +87,7 @@ export default async function RootLayout({ children, params }: { children: React
                 url: normalizedSiteUrl,
                 description: "Document preparation, application filing, follow-up and menu setup for Zomato and Swiggy onboarding.",
                 areaServed: { "@type": "Country", name: "India" },
-                founder: { "@type": "Person", name: personal.founderName || founder.name, ...(personal.linkedin ? { sameAs: [personal.linkedin] } : founder.linkedin ? { sameAs: [founder.linkedin] } : {}) },
+                founder: { "@type": "Person", name: founder.name, ...(founder.linkedin ? { sameAs: [founder.linkedin] } : {}) },
               },
             ],
           }}

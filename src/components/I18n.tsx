@@ -1,16 +1,29 @@
 "use client";
 
-import { createContext, useCallback, useContext, useMemo } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { getContent } from "@/lib/i18n-content";
 import { translate, type Locale } from "@/lib/i18n";
-import type { PersonalSettings } from "@/lib/store";
+import { defaultPersonalSettings, type PersonalSettings } from "@/lib/personal-settings";
 
 const Ctx = createContext<Locale>("en");
 const PersonalCtx = createContext<PersonalSettings | null>(null);
 
-export function LocaleProvider({ locale, personal, children }: { locale: Locale; personal: PersonalSettings; children: React.ReactNode }) {
+export function LocaleProvider({ locale, personal, children }: { locale: Locale; personal?: PersonalSettings; children: React.ReactNode }) {
+  const [livePersonal, setLivePersonal] = useState<PersonalSettings>(personal ?? defaultPersonalSettings);
+  useEffect(() => {
+    let active = true;
+    fetch("/api/site/settings", { cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((settings: PersonalSettings | null) => {
+        if (active && settings) setLivePersonal(settings);
+      })
+      .catch(() => undefined);
+    return () => {
+      active = false;
+    };
+  }, []);
   return (
-    <PersonalCtx.Provider value={personal}>
+    <PersonalCtx.Provider value={livePersonal}>
       <Ctx.Provider value={locale}>{children}</Ctx.Provider>
     </PersonalCtx.Provider>
   );

@@ -1,26 +1,13 @@
 "use client";
 
 import { useEffect } from "react";
-import Lenis from "lenis";
-import { gsap, ScrollTrigger, reduced } from "./gsap";
-
-declare global {
-  interface Window {
-    __lenis?: Lenis;
-  }
-}
+import { ScrollTrigger, reduced } from "./gsap";
 
 export function SmoothScroll() {
   useEffect(() => {
     if (reduced()) return;
-    if (window.matchMedia("(pointer: coarse)").matches) return;
-    if (navigator.maxTouchPoints > 0) return;
-    const lenis = new Lenis({ lerp: 0.085, wheelMultiplier: 0.95, touchMultiplier: 1 });
-    window.__lenis = lenis;
-    lenis.on("scroll", ScrollTrigger.update);
-    const tick = (t: number) => lenis.raf(t * 1000);
-    gsap.ticker.add(tick);
-    gsap.ticker.lagSmoothing(0);
+    const update = () => ScrollTrigger.update();
+    window.addEventListener("scroll", update, { passive: true });
 
     // In-page anchors glide, leaving room for the sticky nav.
     const onClick = (e: MouseEvent) => {
@@ -32,15 +19,14 @@ export function SmoothScroll() {
       const el = document.querySelector(hash);
       if (!el) return;
       e.preventDefault();
-      lenis.scrollTo(el as HTMLElement, { offset: -64, duration: 1.6 });
+      const top = el.getBoundingClientRect().top + window.scrollY - 64;
+      window.scrollTo({ top, behavior: "smooth" });
     };
     document.addEventListener("click", onClick);
 
     return () => {
       document.removeEventListener("click", onClick);
-      gsap.ticker.remove(tick);
-      lenis.destroy();
-      window.__lenis = undefined;
+      window.removeEventListener("scroll", update);
     };
   }, []);
   return null;

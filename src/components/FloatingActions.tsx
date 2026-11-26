@@ -39,8 +39,7 @@ export function FloatingActions() {
   }, [path]);
 
   const toTop = () => {
-    if (window.__lenis) window.__lenis.scrollTo(0, { duration: 1.4 });
-    else window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const wa = `https://wa.me/${site.whatsappNumber}?text=${encodeURIComponent(site.whatsappMessage)}`;
