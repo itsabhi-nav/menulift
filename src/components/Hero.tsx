@@ -6,7 +6,6 @@ import { markReady } from "@/lib/ready";
 import { PhoneLive } from "./PhoneLive";
 import { Arrow } from "./ui";
 import { HeroProgress } from "./HeroProgress";
-import { gsap, useGSAP, reduced } from "./motion/gsap";
 import { useContent, useT } from "@/components/I18n";
 
 export function Hero() {
@@ -17,27 +16,6 @@ export function Hero() {
   useEffect(() => {
     markReady();
   }, []);
-
-  useGSAP(
-    () => {
-      if (reduced()) return;
-      const q = gsap.utils.selector(root);
-      gsap.from(q(".h-rise"), { y: 36, autoAlpha: 0, duration: 1.1, stagger: 0.1, ease: "power3.out" });
-      gsap.from(q(".h-phone"), { y: 160, autoAlpha: 0, duration: 1.5, delay: 0.35, ease: "power3.out" });
-      gsap.to(q(".h-phone"), {
-        y: -70,
-        ease: "none",
-        scrollTrigger: { trigger: root.current, start: "top top", end: "bottom top", scrub: true },
-      });
-      gsap.to(q(".h-copy"), {
-        y: -50,
-        autoAlpha: 0.2,
-        ease: "none",
-        scrollTrigger: { trigger: root.current, start: "30% top", end: "bottom top", scrub: true },
-      });
-    },
-    { scope: root },
-  );
 
   return (
     <section ref={root} data-hero className="relative isolate overflow-hidden bg-deep text-paper" aria-labelledby="hero-title">

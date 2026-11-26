@@ -56,6 +56,10 @@ export default async function RootLayout({ children, params }: { children: React
   if (!isLocale(lang)) notFound();
   return (
     <html lang={lang} className={fontClasses}>
+      <head>
+        <link rel="preload" as="image" href="/photos/founder.jpg" fetchPriority="high" />
+        <link rel="preconnect" href="https://ttiwoorafshshautkadc.supabase.co" />
+      </head>
       <body>
         <RouteProgress />
         <LocaleProvider locale={lang} personal={defaultPersonalSettings}>{children}</LocaleProvider>

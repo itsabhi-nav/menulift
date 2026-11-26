@@ -13,6 +13,7 @@ export function LoopVideo({ id, className = "", eager = false, rate = 1 }: { id:
     v.muted = true;
     v.defaultMuted = true;
     v.playbackRate = rate;
+    v.poster = `/media/${id}.jpg`;
     const io = new IntersectionObserver(
       ([e]) => {
         if (!e.isIntersecting) {
@@ -27,7 +28,7 @@ export function LoopVideo({ id, className = "", eager = false, rate = 1 }: { id:
         }
         v.play().catch(() => {});
       },
-      { rootMargin: "150px 0px", threshold: 0.15 },
+      { rootMargin: "300px 0px", threshold: 0.1 },
     );
     io.observe(v);
     return () => io.disconnect();
@@ -37,7 +38,6 @@ export function LoopVideo({ id, className = "", eager = false, rate = 1 }: { id:
     <video
       ref={ref}
       className={`absolute inset-0 h-full w-full object-cover ${className}`}
-      poster={`/media/${id}.jpg`}
       muted
       loop
       playsInline

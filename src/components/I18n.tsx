@@ -12,7 +12,7 @@ export function LocaleProvider({ locale, personal, children }: { locale: Locale;
   const [livePersonal, setLivePersonal] = useState<PersonalSettings>(personal ?? defaultPersonalSettings);
   useEffect(() => {
     let active = true;
-    fetch("/api/site/settings", { cache: "no-store" })
+    fetch("/api/site/settings", { cache: "force-cache" })
       .then((response) => (response.ok ? response.json() : null))
       .then((settings: PersonalSettings | null) => {
         if (active && settings) setLivePersonal(settings);
