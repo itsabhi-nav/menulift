@@ -25,4 +25,21 @@ Copy `.env.example` to `.env.local` and fill in what you need. On the live site 
 `ADMIN_PASSWORD` (10+ characters) and a `DATABASE_URL` (Postgres). Without `DATABASE_URL` it uses SQLite,
 which does not persist on Netlify/Vercel.
 
+### Supabase setup
+
+1. Create a Supabase project.
+2. Open **SQL Editor** and run the complete contents of `supabase/schema.sql` once.
+3. In **Project Settings -> Database -> Connection string**, copy the direct or session/transaction connection URI.
+4. Set these production environment variables:
+
+```env
+NEXT_PUBLIC_SITE_URL=https://menulift.in
+ADMIN_PASSWORD=<strong-random-password>
+ADMIN_SECRET=<long-random-secret>
+DATABASE_URL=<supabase-postgres-connection-uri>
+```
+
+The SQL creates the `leads` and `settings` tables used for bookings, enquiries, slot configuration and admin personal information.
+It also enables Row Level Security and does not create public policies, preventing browser access through Supabase's public REST API.
+
 Content lives in `src/lib/content.ts`.
