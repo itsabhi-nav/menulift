@@ -8,9 +8,17 @@ export type { Lead, LeadStatus, LeadType, PersonalSettings } from "./store-types
  */
 let backend: Promise<Backend> | undefined;
 function be() {
-  backend ??= process.env.DATABASE_URL
-    ? import("./store-pg").then((m) => m.postgres)
-    : import("./store-sqlite").then((m) => m.sqlite);
+  const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey =
+    process.env.SUPABASE_SECRET_KEY ||
+    process.env.SUPABASE_SERVICE_ROLE_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  backend ??= supabaseUrl && supabaseKey
+    ? import("./store-supabase").then((m) => m.supabase)
+    : process.env.DATABASE_URL
+      ? import("./store-pg").then((m) => m.postgres)
+      : import("./store-sqlite").then((m) => m.sqlite);
   return backend;
 }
 

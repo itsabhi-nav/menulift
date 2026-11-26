@@ -29,14 +29,16 @@ which does not persist on Netlify/Vercel.
 
 1. Create a Supabase project.
 2. Open **SQL Editor** and run the complete contents of `supabase/schema.sql` once.
-3. In **Project Settings -> Database -> Connection string**, copy the direct or session/transaction connection URI.
+3. In **Project Settings -> API**, copy the Project URL and publishable key. Create/use the secret key for server-only operations.
 4. Set these production environment variables:
 
 ```env
 NEXT_PUBLIC_SITE_URL=https://menulift.in
 ADMIN_PASSWORD=<strong-random-password>
 ADMIN_SECRET=<long-random-secret>
-DATABASE_URL=<supabase-postgres-connection-uri>
+NEXT_PUBLIC_SUPABASE_URL=https://ttiwoorafshshautkadc.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<publishable-key>
+SUPABASE_SECRET_KEY=<secret-key>
 ```
 
 The SQL creates the `leads` and `settings` tables used for bookings, enquiries, slot configuration and admin personal information.
