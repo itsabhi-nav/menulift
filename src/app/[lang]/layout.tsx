@@ -11,7 +11,6 @@ import { founder } from "@/lib/content";
 import { isLocale, locales } from "@/lib/i18n";
 import { getPersonalSettings } from "@/lib/store";
 import { RouteProgress } from "@/components/RouteProgress";
-import { Preloader } from "@/components/motion/Preloader";
 
 export const instant = false;
 
@@ -62,7 +61,6 @@ export default async function RootLayout({ children, params }: { children: React
     <html lang={lang} className={fontClasses}>
       <body>
         <RouteProgress />
-        <Preloader />
         <LocaleProvider locale={lang} personal={personal}>{children}</LocaleProvider>
         <SmoothScroll />
         <Analytics />

@@ -4,7 +4,6 @@ import { useRef } from "react";
 import Link from "@/components/L";
 import { Arrow, Check, Cross } from "../ui";
 import { SnapDots } from "../SnapDots";
-import { gsap, useGSAP } from "../motion/gsap";
 import { useContent, useT } from "@/components/I18n";
 
 const docs: [string, boolean][] = [
@@ -104,23 +103,6 @@ export function Problems() {
   const problems = buildProblems(t);
   const { site } = useContent();
   const root = useRef<HTMLElement>(null);
-
-  useGSAP(
-    () => {
-      const mm = gsap.matchMedia();
-      mm.add("(min-width: 1024px) and (prefers-reduced-motion: no-preference)", () => {
-        gsap.from(".prob-card", {
-          y: 60,
-          autoAlpha: 0,
-          duration: 0.9,
-          stagger: 0.14,
-          ease: "power3.out",
-          scrollTrigger: { trigger: ".prob-grid", start: "top 80%", once: true },
-        });
-      });
-    },
-    { scope: root },
-  );
 
   return (
     <section ref={root} id="why" className="scroll-mt-16 bg-ink py-14 text-paper sm:py-36">

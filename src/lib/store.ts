@@ -58,6 +58,7 @@ export async function saveSchedule(input: unknown) {
 }
 
 const PERSONAL_KEY = "personal_settings";
+let personalCache: { value: PersonalSettings; expires: number } | undefined;
 export const defaultPersonalSettings: PersonalSettings = {
   founderName: "Anshuman",
   founderRole: "Founder of Menulift",
@@ -72,11 +73,18 @@ export const defaultPersonalSettings: PersonalSettings = {
 };
 
 export async function getPersonalSettings(): Promise<PersonalSettings> {
+  if (personalCache && personalCache.expires > Date.now()) return personalCache.value;
   const raw = await (await be()).getSetting(PERSONAL_KEY);
-  if (!raw) return defaultPersonalSettings;
+  if (!raw) {
+    personalCache = { value: defaultPersonalSettings, expires: Date.now() + 60_000 };
+    return defaultPersonalSettings;
+  }
   try {
-    return { ...defaultPersonalSettings, ...(JSON.parse(raw) as Partial<PersonalSettings>) };
+    const value = { ...defaultPersonalSettings, ...(JSON.parse(raw) as Partial<PersonalSettings>) };
+    personalCache = { value, expires: Date.now() + 60_000 };
+    return value;
   } catch {
+    personalCache = { value: defaultPersonalSettings, expires: Date.now() + 60_000 };
     return defaultPersonalSettings;
   }
 }
@@ -110,5 +118,6 @@ export async function savePersonalSettings(input: unknown): Promise<PersonalSett
     facebook: cleanUrl("facebook"),
   };
   await (await be()).setSetting(PERSONAL_KEY, JSON.stringify(settings));
+  personalCache = { value: settings, expires: Date.now() + 60_000 };
   return settings;
 }

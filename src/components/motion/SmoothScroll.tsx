@@ -13,7 +13,7 @@ declare global {
 export function SmoothScroll() {
   useEffect(() => {
     if (reduced()) return;
-    const lenis = new Lenis({ lerp: 0.085, wheelMultiplier: 0.95 });
+    const lenis = new Lenis({ lerp: 0.085, wheelMultiplier: 0.95, touchMultiplier: 1 });
     window.__lenis = lenis;
     lenis.on("scroll", ScrollTrigger.update);
     const tick = (t: number) => lenis.raf(t * 1000);
