@@ -130,6 +130,18 @@ html:not(.lenis) {
   opacity: 1;
 }
 
+@keyframes route-progress {
+  0% { width: 8%; }
+  35% { width: 42%; }
+  70% { width: 76%; }
+  100% { width: 92%; }
+}
+
+@keyframes route-complete {
+  from { width: 92%; }
+  to { width: 100%; }
+}
+
 @keyframes spin-slow {
   to {
     transform: rotate(360deg);

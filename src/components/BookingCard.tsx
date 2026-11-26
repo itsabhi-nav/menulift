@@ -224,7 +224,13 @@ export function BookingCard({
       <div className="mt-5">
         <Step n={1}>{t("Pick a day")}</Step>
         <div className="mt-3 grid grid-cols-3 gap-2" role="tablist" aria-label={t("Choose a day")}>
-          {!days && !loadError && <span className="col-span-3 py-3 text-[14px] text-slate">{t("Checking free slots…")}</span>}
+          {!days && !loadError && (
+            <div className="col-span-3 grid grid-cols-3 gap-2" aria-label={t("Checking free slots…")} aria-busy="true">
+              {[0, 1, 2].map((item) => (
+                <div key={item} className="h-[58px] animate-pulse rounded-2xl bg-line" />
+              ))}
+            </div>
+          )}
           {days?.map((d) => (
             <button
               key={d.date}
@@ -397,7 +403,12 @@ export function BookingCard({
         ref={endBtn}
         className="mt-6 flex min-h-14 w-full items-center justify-center rounded-full bg-ink text-[17px] font-bold text-paper transition-colors hover:bg-ink-2 disabled:opacity-60"
       >
-        {busy ? t("Reserving your slot…") : t("Book my free call")}
+        {busy ? (
+          <>
+            <span className="mr-2 h-5 w-5 animate-spin rounded-full border-2 border-paper/30 border-t-paper" aria-hidden />
+            {t("Reserving your slot…")}
+          </>
+        ) : t("Book my free call")}
       </button>
       <p className="mt-3 text-center text-[13px] text-slate">
         {t("Free, no payment. We message you on WhatsApp to confirm.")}
@@ -419,7 +430,12 @@ export function BookingCard({
             disabled={busy}
             className="min-h-12 shrink-0 rounded-full bg-accent px-6 text-[16px] font-bold text-ink disabled:opacity-60"
           >
-            {busy ? t("Reserving your slot…") : t("Book my free call")}
+            {busy ? (
+              <>
+                <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-ink/30 border-t-ink" aria-hidden />
+                {t("Reserving…")}
+              </>
+            ) : t("Book my free call")}
           </button>
         </div>
       </div>

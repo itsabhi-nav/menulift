@@ -57,6 +57,7 @@ export function CheckFlow() {
   const [name, setName] = useState("");
   const [error, setError] = useState("");
   const [started, setStarted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   // Pre-select kitchen type from ?type= and skip that question.
   useEffect(() => {
@@ -114,7 +115,7 @@ export function CheckFlow() {
     setTimeout(() => setStep((s) => s + 1), 180);
   }
 
-  function submit(e: React.FormEvent) {
+  async function submit(e: React.FormEvent) {
     e.preventDefault();
     const digits = phone.replace(/\D/g, "").slice(-10);
     if (digits.length !== 10) {
@@ -123,24 +124,31 @@ export function CheckFlow() {
     }
     setError("");
     setPhone(digits);
+    setSubmitting(true);
     const eventId = crypto.randomUUID();
     track("check_completed", { score, eventId });
-    fetch("/api/leads", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      keepalive: true,
-      body: JSON.stringify({
-        name,
-        phone: digits,
-        kitchen: TYPE_NAMES[answers.type] ?? answers.type,
-        score,
-        missing,
-        utm: getUtm(),
-        eventId,
-        fbp: document.cookie.match(/(?:^|; )_fbp=([^;]*)/)?.[1],
-        fbc: document.cookie.match(/(?:^|; )_fbc=([^;]*)/)?.[1],
-      }),
-    }).catch(() => {});
+    try {
+      await fetch("/api/leads", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        keepalive: true,
+        body: JSON.stringify({
+          name,
+          phone: digits,
+          kitchen: TYPE_NAMES[answers.type] ?? answers.type,
+          score,
+          missing,
+          utm: getUtm(),
+          eventId,
+          fbp: document.cookie.match(/(?:^|; )_fbp=([^;]*)/)?.[1],
+          fbc: document.cookie.match(/(?:^|; )_fbc=([^;]*)/)?.[1],
+        }),
+      });
+    } catch {
+      // The result remains available even if lead delivery is temporarily unavailable.
+    } finally {
+      setSubmitting(false);
+    }
     try {
       localStorage.setItem("menulift_check", JSON.stringify({ answers, score, phone: digits, name }));
     } catch {}
@@ -281,10 +289,20 @@ export function CheckFlow() {
                 )}
                 <button
                   type="submit"
-                  className="mt-2 flex min-h-14 items-center justify-center gap-2 rounded-full bg-accent text-[18px] font-bold text-ink hover:bg-accent-deep"
+                  disabled={submitting}
+                  className="mt-2 flex min-h-14 items-center justify-center gap-2 rounded-full bg-accent text-[18px] font-bold text-ink hover:bg-accent-deep disabled:cursor-wait disabled:opacity-70"
                 >
-                  {t("Show my result")}
-                  <Arrow />
+                  {submitting ? (
+                    <>
+                      <span className="h-5 w-5 animate-spin rounded-full border-2 border-ink/30 border-t-ink" aria-hidden />
+                      {t("Preparing your result…")}
+                    </>
+                  ) : (
+                    <>
+                      {t("Show my result")}
+                      <Arrow />
+                    </>
+                  )}
                 </button>
               </form>
               <button

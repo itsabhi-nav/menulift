@@ -67,7 +67,12 @@ export function PartnerForm() {
       <p className="mt-4 break-all text-[13px] text-slate">Your tracked link will be: {link}</p>
       {(msg || state === "error") && <p role="alert" className="mt-3 text-[14px] font-semibold text-danger-deep">{msg || "Something went wrong. Please try again."}</p>}
       <button disabled={state === "busy"} className="mt-5 flex min-h-14 w-full items-center justify-center rounded-full bg-ink text-[17px] font-bold text-paper disabled:opacity-60">
-        {state === "busy" ? "Sending…" : "Join as a partner"}
+        {state === "busy" ? (
+          <>
+            <span className="mr-2 h-5 w-5 animate-spin rounded-full border-2 border-paper/30 border-t-paper" aria-hidden />
+            Sending…
+          </>
+        ) : "Join as a partner"}
       </button>
     </form>
   );
