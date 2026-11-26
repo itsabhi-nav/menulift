@@ -6,6 +6,7 @@ import { markReady } from "@/lib/ready";
 import { PhoneLive } from "./PhoneLive";
 import { Arrow } from "./ui";
 import { HeroProgress } from "./HeroProgress";
+import { LoopVideo } from "./LoopVideo";
 import { useContent, useT } from "@/components/I18n";
 
 export function Hero() {
@@ -20,6 +21,9 @@ export function Hero() {
   return (
     <section ref={root} data-hero className="relative isolate overflow-hidden bg-deep text-paper" aria-labelledby="hero-title">
       <div className="absolute inset-0 -z-10" aria-hidden>
+        <div className="absolute inset-0">
+          <LoopVideo id="hero" eager rate={0.75} className="object-[58%_50%] opacity-80" />
+        </div>
         <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 75% 60% at 50% 45%, rgb(0 0 0 / 0.7), transparent 80%)" }} />
         <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/50 to-black/90" />
         <div

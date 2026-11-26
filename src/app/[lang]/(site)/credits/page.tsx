@@ -17,6 +17,10 @@ export default function Page() {
           <p>
             Kitchen videos from <a className="underline" href="https://mixkit.co">Mixkit</a>, under the Mixkit free licence.
           </p>
+          <p>
+            Hero kitchen footage via <a className="underline" href="https://www.pexels.com/video/a-man-cooking-in-a-commercial-kitchen-4253135/">Pexels</a>,
+            used under the Pexels licence.
+          </p>
         </div>
       </section>
     </>
